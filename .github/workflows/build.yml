@@ -49,8 +49,19 @@ jobs:
             find bin/packages/x86_64/huggy -maxdepth 1 -type f | sort
             exit 1
           fi
-          cp "${packages[0]}" dist/
-          echo "path=dist/$(basename "${packages[0]}")" >> "$GITHUB_OUTPUT"
+          case "${{ matrix.package_type }}" in
+            ipk)
+              artifact_name="$(basename "${packages[0]}")"
+              artifact_name="${artifact_name%_*}"
+              artifact_name="${artifact_name%-*}.ipk"
+              artifact_name="${artifact_name/_/-}"
+              ;;
+            apk)
+              artifact_name="$(basename "${packages[0]}")"
+              ;;
+          esac
+          cp "${packages[0]}" "dist/${artifact_name}"
+          echo "path=dist/${artifact_name}" >> "$GITHUB_OUTPUT"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
