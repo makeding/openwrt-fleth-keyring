@@ -1,7 +1,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openwrt-fleth-keyring
+PKG_VERSION:=v1
 PKG_RELEASE:=1
+PKGARCH:=all
 
 PKG_MAINTAINER:=huggy
 PKG_LICENSE:=GPL-2.0-only
