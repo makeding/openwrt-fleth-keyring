@@ -28,10 +28,42 @@ define Package/openwrt-fleth-keyring/install
 	$(INSTALL_DIR) $(1)/etc/apk/keys/
 	$(INSTALL_DATA) ./apk/fleth.pem $(1)/etc/apk/keys/
 endef
+
+define Package/openwrt-fleth-keyring/postinst
+#!/bin/sh
+feed="https://dl.fleth.link/apk/all/packages.adb"
+file="$${IPKG_INSTROOT}/etc/apk/repositories.d/customfeeds.list"
+mkdir -p "$${file%/*}"
+touch "$$file"
+grep -qxF "$$feed" "$$file" || echo "$$feed" >> "$$file"
+endef
+
+define Package/openwrt-fleth-keyring/postrm
+#!/bin/sh
+file="$${IPKG_INSTROOT}/etc/apk/repositories.d/customfeeds.list"
+[ -f "$$file" ] || exit 0
+sed -i "\|^https://dl\.fleth\.link/apk/all/packages\.adb$$|d" "$$file"
+endef
 else
 define Package/openwrt-fleth-keyring/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys/
 	$(INSTALL_DATA) ./usign/064499bbef2b4ee5 $(1)/etc/opkg/keys/
+endef
+
+define Package/openwrt-fleth-keyring/postinst
+#!/bin/sh
+feed="src/gz fleth https://dl.fleth.link/opkg/all"
+file="$${IPKG_INSTROOT}/etc/opkg/customfeeds.conf"
+mkdir -p "$${file%/*}"
+touch "$$file"
+grep -qxF "$$feed" "$$file" || echo "$$feed" >> "$$file"
+endef
+
+define Package/openwrt-fleth-keyring/postrm
+#!/bin/sh
+file="$${IPKG_INSTROOT}/etc/opkg/customfeeds.conf"
+[ -f "$$file" ] || exit 0
+sed -i "\|^src/gz fleth https://dl\.fleth\.link/opkg/all$$|d" "$$file"
 endef
 endif
 

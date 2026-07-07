@@ -6,9 +6,11 @@ OpenWrt keyring package for the Flet'H package feed at
 The same package source builds for both OpenWrt package managers:
 
 - OpenWrt 24.10 / opkg installs the usign public key to
-  `/etc/opkg/keys/064499bbef2b4ee5`
+  `/etc/opkg/keys/064499bbef2b4ee5` and appends the feed to
+  `/etc/opkg/customfeeds.conf`
 - OpenWrt 25.12 / apk installs the APK public key to
-  `/etc/apk/keys/fleth.pem`
+  `/etc/apk/keys/fleth.pem` and appends the feed to
+  `/etc/apk/repositories.d/customfeeds.list`
 
 This is useful for Image Builder profiles and SDK feeds that should trust the
 Flet'H package repository without running manual key setup commands on first
